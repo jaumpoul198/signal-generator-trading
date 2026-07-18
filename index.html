@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avalon Trader Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="avalon-container">
+        <div class="header">
+            <h1>⚡ AVALON TRADER DASHBOARD</h1>
+            <div>
+                <span class="badge">MODO: SIMULAÇÃO</span>
+                <span class="badge" id="clock">00:00:00</span>
+            </div>
+        </div>
+
+        <div class="top-bar">
+            <div class="card">
+                <div class="card-label">Ativo</div>
+                <div class="card-value neutral" id="currentPrice">1.08542</div>
+                <div class="card-sub" id="priceChange">+0.12% ▲</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Tendência (Média Móvel)</div>
+                <div class="card-value up" id="trendSignal">ALTA</div>
+                <div class="card-sub">Força: 72%</div>
+            </div>
+            <div class="card">
+                <div class="card-label">RSI (14)</div>
+                <div class="card-value neutral" id="rsiDisplay">58.4</div>
+                <div class="card-sub">Zona Neutra</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Força do Sinal</div>
+                <div class="card-value up" id="signalStrength">FORTE COMPRA</div>
+                <div class="card-sub">Confiança: 85%</div>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <div class="chart-area">
+                <div class="chart-header">
+                    <h3>📊 Gráfico de Candlesticks</h3>
+                    <div class="timeframes">
+                        <button class="tf-btn active" data-tf="1M">1M</button>
+                        <button class="tf-btn" data-tf="5M">5M</button>
+                        <button class="tf-btn" data-tf="15M">15M</button>
+                        <button class="tf-btn" data-tf="1H">1H</button>
+                    </div>
+                </div>
+                <canvas id="candleCanvas"></canvas>
+                <div class="tooltip" id="chartTooltip"></div>
+                <div class="ma-lines">
+                    <div class="ma-line"><div class="ma-dot" style="background:#58a6ff"></div>MA7</div>
+                    <div class="ma-line"><div class="ma-dot" style="background:#a371f7"></div>MA20</div>
+                    <div class="ma-line"><div class="ma-dot" style="background:#d29922"></div>MA50</div>
+                    <div class="ma-line"><div class="ma-dot" style="background:#fff"></div>Bollinger</div>
+                </div>
+            </div>
+
+            <div class="indicators-panel">
+                <div class="indicator-card">
+                    <h4>📈 Indicadores Técnicos</h4>
+                    <div class="indicator-row">
+                        <span>RSI (14)</span>
+                        <div class="rsi-gauge">
+                            <span class="rsi-value" id="rsiVal">58</span>
+                            <div class="rsi-bar-container">
+                                <div class="rsi-marker" id="rsiMarker" style="left:58%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="indicator-row">
+                        <span>MACD</span>
+                        <span class="signal-badge signal-buy" id="macdSignal">COMPRA</span>
+                    </div>
+                    <div class="indicator-row">
+                        <span>Bollinger Bands</span>
+                        <span class="signal-badge signal-neutral" id="bbSignal">NEUTRO</span>
+                    </div>
+                    <div class="indicator-row">
+                        <span>Estocástico (14,3,3)</span>
+                        <span class="signal-badge signal-buy" id="stochSignal">COMPRA</span>
+                    </div>
+                    <div class="indicator-row">
+                        <span>Volume</span>
+                        <span class="signal-badge signal-buy" id="volSignal">ALTO</span>
+                    </div>
+                </div>
+
+                <div class="indicator-card">
+                    <h4>⚙️ Configurações</h4>
+                    <div class="toggle-row">
+                        <span>Alertas Sonoros</span>
+                        <div class="toggle-switch on" id="soundToggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="toggle-row">
+                        <span>Auto-Análise</span>
+                        <div class="toggle-switch on" id="autoToggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="toggle-row">
+                        <span>Mostrar Médias Móveis</span>
+                        <div class="toggle-switch on" id="maToggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    <div class="toggle-row">
+                        <span>Bollinger Bands</span>
+                        <div class="toggle-switch on" id="bbToggle" onclick="toggleSwitch(this)"></div>
+                    </div>
+                </div>
+
+                <div class="simulator">
+                    <h4>🎮 Simulador de Operação</h4>
+                    <div class="sim-grid">
+                        <div class="sim-input-group">
+                            <label>Valor (R$)</label>
+                            <input type="number" id="simAmount" value="100" min="1" step="10">
+                        </div>
+                        <div class="sim-input-group">
+                            <label>Tempo de Expiração</label>
+                            <select id="simExpiry">
+                                <option value="1">1 minuto</option>
+                                <option value="5" selected>5 minutos</option>
+                                <option value="15">15 minutos</option>
+                                <option value="30">30 minutos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="sim-buttons">
+                        <button class="btn btn-call" onclick="simulateTrade('CALL')">📈 CALL (ALTA)</button>
+                        <button class="btn btn-put" onclick="simulateTrade('PUT')">📉 PUT (BAIXA)</button>
+                    </div>
+                    <div class="result-area" id="simResult">
+                        <span style="color:var(--text-secondary)">Clique em CALL ou PUT para simular uma operação...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-box alert-info" id="mainAlert">
+            <span>ℹ️</span> Sistema em modo de simulação. Os dados são gerados para fins educacionais. Nenhuma operação real será executada.
+        </div>
+
+        <div class="log-panel">
+            <h4>📋 Log de Análise</h4>
+            <div id="logContainer">
+                <div class="log-entry"><span class="log-time">19:05:01</span><span class="log-info">Dashboard inicializado</span></div>
+                <div class="log-entry"><span class="log-time">19:05:02</span><span class="log-info">Indicadores calculados — Tendência de ALTA detectada</span></div>
+                <div class="log-entry"><span class="log-time">19:05:03</span><span class="log-info">RSI em zona neutra (58.4) — aguardando confirmação</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
