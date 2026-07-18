@@ -517,4 +517,28 @@
         init();
     }
 
+
+// ========== CONEXÃO AVALON TRADE ROOM ==========
+
+window.connectAvalon = function(){
+
+    const url =
+    document.getElementById("avalonUrl").value;
+
+    document.getElementById("connectionStatus").innerHTML =
+    "🔄 Abrindo Avalon Trade Room...";
+
+    window.open(
+        url,
+        "AvalonTradeRoom",
+        "width=1200,height=800"
+    );
+
+    addLog(
+        "Avalon Trade Room conectado",
+        "info"
+    );
+
+};
+
 })();
